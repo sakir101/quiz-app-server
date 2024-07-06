@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { IQuestion } from "./quiz.interface";
 import { Question } from "./quiz.model";
 import httpStatus from "http-status";
@@ -41,9 +40,27 @@ const updateQuiz = async (quizId: string, updatedData: Partial<IQuestion>): Prom
     return result;
 };
 
+const getQuizByQuizId = async (quizId: string): Promise<IQuestion | null> => {
+    const quiz = await Question.findOne({ quizId: quizId });
+    if (!quiz) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Quiz not found');
+    }
+    return quiz;
+};
+
+const getQuizById = async (quizId: string): Promise<IQuestion | null> => {
+    const quiz = await Question.findById({ _id: quizId });
+    if (!quiz) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Quiz not found');
+    }
+    return quiz;
+};
+
 export const QuizService = {
     createQuiz,
     fetchAllQuizzes,
     deleteQuiz,
-    updateQuiz
+    updateQuiz,
+    getQuizByQuizId,
+    getQuizById
 }

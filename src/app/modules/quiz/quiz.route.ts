@@ -10,4 +10,13 @@ router.post('/', validateRequest
     QuizController.createQuiz
 )
 
+router.get('/:quizId', QuizController.getQuizByQuizId)
+router.get('/:id', QuizController.getQuizById)
+
+router.patch('/:id',
+    QuizController.updateQuiz)
+router.delete('/:id', QuizController.deleteQuiz)
+
+router.get('/', QuizController.fetchAllQuizzes)
+
 export const QuizRoutes = router
