@@ -11,6 +11,15 @@ const getUserById = async (id: string): Promise<IUser | null> => {
     return user;
 };
 
+const fetchAllUsers = async (): Promise<IUser[]> => {
+    const users = await User.find();
+    if (!users) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'No users found');
+    }
+    return users;
+};
+
 export const USerService = {
-    getUserById
+    getUserById,
+    fetchAllUsers
 }

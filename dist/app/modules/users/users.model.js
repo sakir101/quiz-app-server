@@ -18,24 +18,9 @@ const users_constant_1 = require("./users.constant");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const config_1 = __importDefault(require("../../../config"));
 const userSchema = new mongoose_1.Schema({
-    name: {
-        type: {
-            firstName: {
-                type: String,
-                required: true,
-            },
-            middleName: {
-                type: String
-            },
-            lastName: {
-                type: String,
-                required: true,
-            }
-        }
-    },
-    img: {
+    fullName: {
         type: String,
-        required: true,
+        required: true
     },
     role: {
         type: String,
@@ -52,6 +37,10 @@ const userSchema = new mongoose_1.Schema({
         required: true,
         select: false
     },
+    quizMark: {
+        type: String,
+        default: 'N/A'
+    },
 }, {
     timestamps: true,
     toJSON: {
@@ -63,11 +52,11 @@ userSchema.statics.isUserExist = function (id) {
         const objectId = new mongoose_1.Types.ObjectId(id);
         return yield exports.User.findById(objectId, {
             _id: 1,
-            name: 1,
-            img: 1,
+            fullName: 1,
             role: 1,
             email: 1,
             password: 1,
+            quizMark: 1
         });
     });
 };

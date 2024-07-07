@@ -11,5 +11,7 @@ const auth_controller_1 = require("./auth.controller");
 const auth_validation_1 = require("./auth.validation");
 const router = express_1.default.Router();
 router.post('/signup', (0, validateRequest_1.default)(users_validation_1.UserValidation.createUserZodSchema), auth_controller_1.AuthController.createUser);
+router.post('/signup/admin', (0, validateRequest_1.default)(users_validation_1.UserValidation.createUserZodSchema), auth_controller_1.AuthController.createAdmin);
 router.post('/login', (0, validateRequest_1.default)(auth_validation_1.AuthValidation.loginZodSchema), auth_controller_1.AuthController.loginUser);
+router.patch('/update/:id', auth_controller_1.AuthController.updateQuizMark);
 exports.AuthRoutes = router;

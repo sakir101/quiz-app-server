@@ -49,6 +49,7 @@ const getQuizByQuizId = async (quizId: string): Promise<IQuestion | null> => {
 };
 
 const getQuizById = async (quizId: string): Promise<IQuestion | null> => {
+    console.log(quizId)
     const quiz = await Question.findById({ _id: quizId });
     if (!quiz) {
         throw new ApiError(httpStatus.NOT_FOUND, 'Quiz not found');

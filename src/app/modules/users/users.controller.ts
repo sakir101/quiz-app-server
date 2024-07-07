@@ -20,6 +20,21 @@ const getUserById = catchAsync(
     }
 )
 
+const fetchAllUsers = catchAsync(
+    async (req: Request, res: Response) => {
+
+        const result = await USerService.fetchAllUsers()
+
+        sendResponse<IUser[]>(res, {
+            statusCode: httpStatus.OK,
+            success: true,
+            message: 'Users retrived successfully',
+            data: result,
+        });
+    }
+)
+
 export const UserController = {
-    getUserById
+    getUserById,
+    fetchAllUsers
 }

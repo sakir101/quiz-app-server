@@ -38,17 +38,41 @@ const createUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         data: result,
     });
 }));
+const createAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userData = __rest(req.body, []);
+    const result = yield auth_service_1.AuthService.createAdmin(userData);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Admin created successfully',
+        data: result,
+    });
+}));
+const updateQuizMark = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const updatedData = req.body;
+    const result = yield auth_service_1.AuthService.updateQuizMark(id, updatedData);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'User update successfully',
+        data: result,
+    });
+}));
 const loginUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const loginData = __rest(req.body, []);
     const result = yield auth_service_1.AuthService.loginUser(loginData);
+    const others = __rest(result, []);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
         message: 'User login successfully',
-        data: result
+        data: others
     });
 }));
 exports.AuthController = {
     createUser,
-    loginUser
+    createAdmin,
+    loginUser,
+    updateQuizMark
 };

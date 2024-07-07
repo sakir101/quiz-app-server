@@ -5,12 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRoutes = void 0;
 const express_1 = __importDefault(require("express"));
-const user_controller_1 = require("./user.controller");
-const user_validation_1 = require("./user.validation");
-const validateRequest_1 = __importDefault(require("../../middlewares/validateRequest"));
+const users_controller_1 = require("./users.controller");
 const router = express_1.default.Router();
-router.get('/:id', user_controller_1.UserController.getSingleUser);
-router.patch('/:id', (0, validateRequest_1.default)(user_validation_1.UserValidation.updateUserZodSchema), user_controller_1.UserController.updateUser);
-router.delete('/:id', user_controller_1.UserController.deleteUser);
-router.get('/', user_controller_1.UserController.getAllUsers);
+router.get('/:id', users_controller_1.UserController.getUserById);
+router.get('/', users_controller_1.UserController.fetchAllUsers);
 exports.UserRoutes = router;

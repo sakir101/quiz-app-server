@@ -11,7 +11,7 @@ router.post('/create', validateRequest
 )
 
 router.get('/:quizId', QuizController.getQuizByQuizId)
-router.get('/:id', QuizController.getQuizById)
+router.get('/getQuiz/:id', QuizController.getQuizById)
 
 router.patch('/update/:id',
     QuizController.updateQuiz)

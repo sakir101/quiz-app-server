@@ -97,7 +97,7 @@ const getQuizById = catchAsync(
     async (req: Request, res: Response) => {
         const id = req.params.id;
 
-        const result = await QuizService.getQuizByQuizId(id)
+        const result = await QuizService.getQuizById(id)
 
         sendResponse<IQuestion>(res, {
             statusCode: httpStatus.OK,

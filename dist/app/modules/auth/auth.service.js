@@ -17,9 +17,38 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const users_model_1 = require("../users/users.model");
 const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const http_status_1 = __importDefault(require("http-status"));
+const user_1 = require("../../../enums/user");
+const jwtHelpers_1 = require("../../../helpers/jwtHelpers");
+const config_1 = __importDefault(require("../../../config"));
 const createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
     let newUserAllData = null;
-    if (user.role === 'reader') {
+    if (user.role === 'user') {
+        if (!user.quizMark) {
+            user.quizMark = 'N/A';
+        }
+        const session = yield mongoose_1.default.startSession();
+        try {
+            session.startTransaction();
+            const newUser = yield users_model_1.User.create([user], { session });
+            if (!newUser.length) {
+                throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to create user');
+            }
+            newUserAllData = newUser[0];
+            yield session.commitTransaction();
+        }
+        catch (error) {
+            yield session.abortTransaction();
+            throw error;
+        }
+        finally {
+            yield session.endSession();
+        }
+    }
+    return newUserAllData;
+});
+const createAdmin = (user) => __awaiter(void 0, void 0, void 0, function* () {
+    let newUserAllData = null;
+    if (user.role === 'admin') {
         const session = yield mongoose_1.default.startSession();
         try {
             session.startTransaction();
@@ -39,6 +68,13 @@ const createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
     }
     return newUserAllData;
 });
+const updateQuizMark = (userId, quizMark) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield users_model_1.User.findByIdAndUpdate({ _id: userId }, quizMark, { new: true });
+    if (!user) {
+        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to update user');
+    }
+    return user;
+});
 const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = payload;
     try {
@@ -55,10 +91,17 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
             // Match password
             if (isUserExist.password &&
                 !(yield users_model_1.User.isPasswordMatched(password, isUserExist.password))) {
-                console.log("1");
                 throw new ApiError_1.default(http_status_1.default.UNAUTHORIZED, 'Password is incorrect');
             }
-            return user;
+            const { _id: userId, role } = isUserExist;
+            let accessToken = "";
+            if (role === user_1.ENUM_USER_ROLE.ADMIN) {
+                accessToken = jwtHelpers_1.jwtHelpers.createToken({ userId, role }, config_1.default.jwt.admin_secret, config_1.default.jwt.expires_in);
+            }
+            if (role === user_1.ENUM_USER_ROLE.USER) {
+                accessToken = jwtHelpers_1.jwtHelpers.createToken({ userId, role }, config_1.default.jwt.user_secret, config_1.default.jwt.expires_in);
+            }
+            return { accessToken };
         }
     }
     catch (error) {
@@ -67,5 +110,7 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.AuthService = {
     createUser,
-    loginUser
+    createAdmin,
+    loginUser,
+    updateQuizMark
 };
