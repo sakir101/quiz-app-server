@@ -24,6 +24,9 @@ router.post(
     AuthController.loginUser
 );
 
+router.patch('/update/:id',
+    AuthController.updateQuizMark)
+
 
 
 export const AuthRoutes = router;

@@ -5,7 +5,7 @@ import validateRequest from '../../middlewares/validateRequest'
 
 const router = express.Router()
 
-router.post('/', validateRequest
+router.post('/create', validateRequest
     (QuizValidation.questionSchema),
     QuizController.createQuiz
 )
@@ -13,9 +13,9 @@ router.post('/', validateRequest
 router.get('/:quizId', QuizController.getQuizByQuizId)
 router.get('/:id', QuizController.getQuizById)
 
-router.patch('/:id',
+router.patch('/update/:id',
     QuizController.updateQuiz)
-router.delete('/:id', QuizController.deleteQuiz)
+router.delete('/delete/:id', QuizController.deleteQuiz)
 
 router.get('/', QuizController.fetchAllQuizzes)
 

@@ -4,6 +4,7 @@ import sendResponse from "../../../shared/sendResponse";
 import { Request, Response } from "express";
 import { AuthService } from "./auth.service";
 import { IUser } from "../users/users.interface";
+import { ILoginUserResponse } from "./auth.interface";
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
 
@@ -37,21 +38,43 @@ const createAdmin = catchAsync(async (req: Request, res: Response) => {
     });
 })
 
+const updateQuizMark = catchAsync(
+    async (req: Request, res: Response) => {
+
+        const id = req.params.id;
+
+        const updatedData = req.body;
+
+        const result = await AuthService.updateQuizMark(id, updatedData)
+
+        sendResponse<IUser>(res, {
+            statusCode: httpStatus.OK,
+            success: true,
+            message: 'User update successfully',
+            data: result,
+        });
+
+
+
+    }
+)
+
 const loginUser = catchAsync(async (req: Request, res: Response) => {
     const { ...loginData } = req.body;
     const result = await AuthService.loginUser(loginData)
 
-
-    sendResponse<IUser>(res, {
+    const { ...others } = result;
+    sendResponse<ILoginUserResponse>(res, {
         statusCode: httpStatus.OK,
         success: true,
         message: 'User login successfully',
-        data: result
+        data: others
     })
 })
 
 export const AuthController = {
     createUser,
     createAdmin,
-    loginUser
+    loginUser,
+    updateQuizMark
 }

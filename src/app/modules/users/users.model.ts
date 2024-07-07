@@ -26,7 +26,8 @@ const userSchema = new Schema<IUser>(
             select: false
         },
         quizMark: {
-            type: String
+            type: String,
+            default: 'N/A'
         },
     },
     {
